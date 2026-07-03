@@ -27,6 +27,15 @@ from mercadopago.resources.order_checkout_pro import (
     OrderCheckoutProDict,
 )
 from mercadopago.resources.payment import Payment
+from mercadopago.resources.payment_additional_info import (
+    PaymentAdditionalInfo,
+    PaymentItem,
+    Payer,
+    PayerAddress,
+    PayerPhone,
+    ReceiverAddress,
+    Shipments,
+)
 from mercadopago.resources.payment_methods import PaymentMethods
 from mercadopago.resources.plan import Plan
 from mercadopago.resources.point import Point
@@ -57,14 +66,21 @@ __all__ = (
     'OrderCheckoutProPaymentMethod',
     'OrderCheckoutProTrack',
     'OrderCheckoutProDict',
+    'Payer',
+    'PayerAddress',
+    'PayerPhone',
     'Payment',
+    'PaymentAdditionalInfo',
+    'PaymentItem',
     'PaymentMethods',
     'Plan',
     'Point',
     'PreApproval',
     'Preference',
+    'ReceiverAddress',
     'Refund',
     'RequestOptions',
+    'Shipments',
     'Subscription',
     'User',
 )
