@@ -21,13 +21,19 @@ class Payment(MPBase):
     def search(self, filters=None, request_options=None):
         """Searches payments matching the given filters.
 
+        The response includes pagination metadata with the following fields:
+        - ``total`` (int): Total number of matching payments
+        - ``limit`` (int): Maximum number of results per page
+        - ``offset`` (int): Starting position for the current page
+
         Args:
             filters: Query-string parameters such as ``external_reference``,
-                ``status``, ``date_created``, etc.
+                ``status``, ``date_created``, ``offset``, ``limit``, etc.
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Paginated list of matching payments.
+            dict: Paginated list of matching payments with ``paging`` metadata
+                containing ``total``, ``limit``, and ``offset``.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/search-payments/get
         """
