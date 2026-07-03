@@ -5,6 +5,7 @@ payments.
 
 `API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-payment/post>`_
 """
+# This is a simple test comment
 from mercadopago.core import MPBase
 
 
