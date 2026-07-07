@@ -4,7 +4,7 @@ Wraps ``/v1/customers`` endpoints to search, retrieve, create, update, and
 delete customer records.  Use alongside :class:`~mercadopago.resources.card.Card`
 to enable one-click payments for returning buyers.
 
-`API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/create-customer/post>`_
+`API reference <https://www.mercadopago.com/developers/en/reference/customers/_customers/post>`_
 """
 from mercadopago.core import MPBase
 
@@ -21,16 +21,21 @@ class Customer(MPBase):
         """Searches customers matching the given filters.
 
         Args:
-            filters: Query-string parameters (e.g. ``email``).
+            filters: Query-string parameters such as ``email``, ``offset``,
+                and ``limit``.
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Paginated list of matching customers.
+            dict: Paginated list of matching customers with ``paging``
+                metadata and ``results`` array.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/search-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_search/get
         """
-        return self._get(uri="/v1/customers/search", filters=filters,
-                         request_options=request_options)
+        return self._get(
+            uri="/v1/customers/search",
+            filters=filters,
+            request_options=request_options,
+        )
 
     def get(self, customer_id, request_options=None):
         """Retrieves a customer by their ID.
@@ -40,18 +45,25 @@ class Customer(MPBase):
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Full customer object.
+            dict: Full customer object including ``id``, ``email``,
+                ``first_name``, ``last_name``, ``phone``,
+                ``identification``, ``address``, and ``cards``.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/get
         """
-        return self._get(uri="/v1/customers/" + str(customer_id), request_options=request_options)
+        return self._get(
+            uri="/v1/customers/" + str(customer_id),
+            request_options=request_options,
+        )
 
     def create(self, customer_object, request_options=None):
         """Creates a new customer record.
 
         Args:
-            customer_object: Dict with customer data (email, first_name,
-                last_name, identification, etc.).
+            customer_object: Dict with customer data. Required fields:
+                ``email``. Optional fields: ``first_name``, ``last_name``,
+                ``phone``, ``identification``, ``default_address``,
+                ``address``, ``description``, ``default_card``.
             request_options: Per-call configuration overrides.
 
         Raises:
@@ -60,20 +72,26 @@ class Customer(MPBase):
         Returns:
             dict: Created customer including its ``id``.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/create-customer/post
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers/post
         """
         if not isinstance(customer_object, dict):
             raise ValueError("Param customer_object must be a Dictionary")
 
-        return self._post(uri="/v1/customers", data=customer_object,
-                          request_options=request_options)
+        return self._post(
+            uri="/v1/customers",
+            data=customer_object,
+            request_options=request_options,
+        )
 
     def update(self, customer_id, customer_object, request_options=None):
         """Updates an existing customer.
 
         Args:
             customer_id: Identifier of the customer to update.
-            customer_object: Dict with the fields to modify.
+            customer_object: Dict with the fields to modify. Updatable
+                fields: ``email``, ``first_name``, ``last_name``,
+                ``phone``, ``identification``, ``default_address``,
+                ``address``, ``description``, ``default_card``.
             request_options: Per-call configuration overrides.
 
         Raises:
@@ -82,25 +100,33 @@ class Customer(MPBase):
         Returns:
             dict: Updated customer object.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/update-customer/put
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/put
         """
         if not isinstance(customer_object, dict):
             raise ValueError("Param customer_object must be a Dictionary")
 
-        return self._put(uri="/v1/customers/" + str(customer_id), data=customer_object,
-                         request_options=request_options)
+        return self._put(
+            uri="/v1/customers/" + str(customer_id),
+            data=customer_object,
+            request_options=request_options,
+        )
 
     def delete(self, customer_id, request_options=None):
         """Deletes a customer record.
+
+        Deleting a customer also removes all associated saved cards.
 
         Args:
             customer_id: Identifier of the customer to delete.
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Deletion confirmation response.
+            dict: Deletion confirmation response with ``id`` and
+                ``message``.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/delete
         """
-        return self._delete(uri="/v1/customers/" + str(customer_id),
-                            request_options=request_options)
+        return self._delete(
+            uri="/v1/customers/" + str(customer_id),
+            request_options=request_options,
+        )

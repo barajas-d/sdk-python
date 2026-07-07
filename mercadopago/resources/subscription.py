@@ -16,6 +16,8 @@ class Subscription(MPBase):
     Each subscription is associated with a :class:`Plan` that defines
     billing frequency and amount.  Use :meth:`create` with a
     ``preapproval_plan_id`` to subscribe a payer to an existing plan.
+    Subscriptions can also be created without a plan by providing
+    ``auto_recurring`` configuration directly.
     """
 
     def search(self, filters=None, request_options=None):
@@ -23,11 +25,12 @@ class Subscription(MPBase):
 
         Args:
             filters: Query-string parameters (e.g. ``status``,
-                ``preapproval_plan_id``).
+                ``preapproval_plan_id``, ``payer_email``).
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Paginated list of matching subscriptions.
+            dict: Paginated list of matching subscriptions with ``results``
+                and ``paging`` metadata.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/subscriptions/search-preapproval/get
         """
@@ -44,7 +47,9 @@ class Subscription(MPBase):
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Full subscription object.
+            dict: Full subscription object including ``id``, ``status``,
+                ``payer_email``, ``auto_recurring`` configuration, and
+                payment details.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/subscriptions/get-preapproval/get
         """
@@ -55,16 +60,38 @@ class Subscription(MPBase):
     def create(self, subscription_object, request_options=None):
         """Creates a new subscription.
 
+        Subscriptions can be created either:
+        - With a plan: Include ``preapproval_plan_id`` to use an existing
+          :class:`Plan` template.
+        - Without a plan: Provide ``auto_recurring`` configuration directly
+          in the request.
+
+        Required fields:
+        - ``reason``: Subscription description
+        - ``payer_email``: Subscriber's email
+        - ``back_url``: Return URL after subscription flow
+        - ``auto_recurring``: Billing configuration (frequency,
+          frequency_type, transaction_amount, currency_id)
+        - ``card_token_id``: Payment method token (for authorized status)
+
+        Optional fields:
+        - ``preapproval_plan_id``: Link to existing plan
+        - ``external_reference``: Your internal identifier
+        - ``status``: Initial status (``"authorized"`` requires card_token_id)
+
         Args:
             subscription_object: Dict defining the subscription
-                (preapproval_plan_id, payer_email, card_token_id, etc.).
+                (preapproval_plan_id, payer_email, card_token_id,
+                auto_recurring, reason, back_url, etc.).
             request_options: Per-call configuration overrides.
 
         Raises:
             ValueError: If *subscription_object* is not a ``dict``.
 
         Returns:
-            dict: Created subscription including its ``id`` and ``status``.
+            dict: Created subscription including its ``id``, ``status``,
+                and ``init_point`` (redirect URL for subscriber to complete
+                payment method setup).
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/subscriptions/create-preapproval/post
         """
@@ -79,8 +106,11 @@ class Subscription(MPBase):
     def update(self, subscription_id, subscription_object, request_options=None):
         """Updates an existing subscription.
 
-        Commonly used to pause, reactivate, or change the card token
-        on a subscription.
+        Commonly used to:
+        - Change status (``"paused"``, ``"authorized"``, ``"cancelled"``)
+        - Update payment method via new ``card_token_id``
+        - Modify ``auto_recurring`` configuration
+        - Update ``reason`` or ``external_reference``
 
         Args:
             subscription_id: Identifier of the subscription to update.
@@ -91,7 +121,7 @@ class Subscription(MPBase):
             ValueError: If *subscription_object* is not a ``dict``.
 
         Returns:
-            dict: Updated subscription object.
+            dict: Updated subscription object with new field values.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/subscriptions/update-preapproval/put
         """
