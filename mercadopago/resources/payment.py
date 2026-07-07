@@ -1,7 +1,7 @@
 """Payment resource for the MercadoPago Checkout API.
 
-Wraps ``/v1/payments`` endpoints to search, retrieve, create, and update
-payments.
+Wraps ``/v1/payments`` endpoints to search, retrieve, create, update, and
+capture payments.
 
 `API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-payment/post>`_
 """
@@ -23,7 +23,7 @@ class Payment(MPBase):
 
         Args:
             filters: Query-string parameters such as ``external_reference``,
-                ``status``, ``date_created``, etc.
+                ``status``, ``date_created``, ``offset``, ``limit``, etc.
             request_options: Per-call configuration overrides.
 
         Returns:
@@ -52,8 +52,8 @@ class Payment(MPBase):
         """Creates a new payment.
 
         Args:
-            payment_object: Dict describing the payment (amount, payer,
-                payment_method_id, token, etc.).
+            payment_object: Dict describing the payment (transaction_amount,
+                payment_method_id, payer, token, installments, etc.).
             request_options: Per-call configuration overrides.
 
         Raises:
@@ -93,3 +93,21 @@ class Payment(MPBase):
 
         return self._put(uri="/v1/payments/" + str(payment_id), data=payment_object,
                          request_options=request_options)
+
+    def capture(self, payment_id, request_options=None):
+        """Captures a previously authorized payment.
+
+        Used in two-step payment flows where the payment was created with
+        ``capture=false``.  Only authorized payments can be captured.
+
+        Args:
+            payment_id: Identifier of the payment to capture.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Captured payment with updated status.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/capture-payment/put
+        """
+        return self._put(uri="/v1/payments/" + str(payment_id),
+                         data={"capture": True}, request_options=request_options)
