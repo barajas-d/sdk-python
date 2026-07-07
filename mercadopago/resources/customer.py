@@ -4,7 +4,7 @@ Wraps ``/v1/customers`` endpoints to search, retrieve, create, update, and
 delete customer records.  Use alongside :class:`~mercadopago.resources.card.Card`
 to enable one-click payments for returning buyers.
 
-`API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/create-customer/post>`_
+`API reference <https://www.mercadopago.com/developers/en/reference/customers/_customers/post>`_
 """
 from mercadopago.core import MPBase
 
@@ -27,7 +27,7 @@ class Customer(MPBase):
         Returns:
             dict: Paginated list of matching customers.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/search-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_search/get
         """
         return self._get(uri="/v1/customers/search", filters=filters,
                          request_options=request_options)
@@ -42,7 +42,7 @@ class Customer(MPBase):
         Returns:
             dict: Full customer object.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/get
         """
         return self._get(uri="/v1/customers/" + str(customer_id), request_options=request_options)
 
@@ -51,7 +51,7 @@ class Customer(MPBase):
 
         Args:
             customer_object: Dict with customer data (email, first_name,
-                last_name, identification, etc.).
+                last_name, identification, phone, address, etc.).
             request_options: Per-call configuration overrides.
 
         Raises:
@@ -60,7 +60,7 @@ class Customer(MPBase):
         Returns:
             dict: Created customer including its ``id``.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/create-customer/post
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers/post
         """
         if not isinstance(customer_object, dict):
             raise ValueError("Param customer_object must be a Dictionary")
@@ -82,7 +82,7 @@ class Customer(MPBase):
         Returns:
             dict: Updated customer object.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/update-customer/put
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/put
         """
         if not isinstance(customer_object, dict):
             raise ValueError("Param customer_object must be a Dictionary")
@@ -100,7 +100,7 @@ class Customer(MPBase):
         Returns:
             dict: Deletion confirmation response.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/customers/_customers_id/delete
         """
         return self._delete(uri="/v1/customers/" + str(customer_id),
                             request_options=request_options)
