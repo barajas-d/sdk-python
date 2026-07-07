@@ -1,7 +1,7 @@
 """Payment resource for the MercadoPago Checkout API.
 
-Wraps ``/v1/payments`` endpoints to search, retrieve, create, and update
-payments.
+Wraps ``/v1/payments`` endpoints to search, retrieve, create, update, and
+cancel payments.
 
 `API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-payment/post>`_
 """
@@ -23,11 +23,13 @@ class Payment(MPBase):
 
         Args:
             filters: Query-string parameters such as ``external_reference``,
-                ``status``, ``date_created``, etc.
+                ``status``, ``date_created``, ``begin_date``, ``end_date``,
+                ``limit``, ``offset``, etc.
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Paginated list of matching payments.
+            dict: Paginated list of matching payments with ``paging`` and
+                ``results`` keys.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/search-payments/get
         """
@@ -42,7 +44,8 @@ class Payment(MPBase):
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Full payment object.
+            dict: Full payment object including status, amounts, payer
+                information, payment method details, and timestamps.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/get-payment/get
         """
@@ -52,15 +55,40 @@ class Payment(MPBase):
         """Creates a new payment.
 
         Args:
-            payment_object: Dict describing the payment (amount, payer,
-                payment_method_id, token, etc.).
+            payment_object: Dict describing the payment with the following
+                typical fields:
+
+                - ``transaction_amount`` (float): Payment amount.
+                - ``payment_method_id`` (str): Payment method (e.g. ``"pix"``,
+                  ``"visa"``, ``"master"``).
+                - ``token`` (str): Card token for credit/debit card payments
+                  (obtained via Card Token API or JS SDK).
+                - ``installments`` (int): Number of installments (default 1).
+                - ``payer`` (dict): Payer information including ``email``,
+                  ``identification``, ``first_name``, ``last_name``, etc.
+                - ``description`` (str): Payment description.
+                - ``external_reference`` (str): Your internal reference ID.
+                - ``statement_descriptor`` (str): Text shown on card statement.
+                - ``capture`` (bool): Whether to capture immediately (default
+                  ``True``). Set to ``False`` for two-step flows.
+                - ``binary_mode`` (bool): When ``True``, payment can only be
+                  approved or rejected (no pending states).
+                - ``notification_url`` (str): Webhook URL for payment updates.
+                - ``callback_url`` (str): Redirect URL after payment (for
+                  redirect-based methods like PIX or bank transfers).
+                - ``additional_info`` (dict): Extra metadata such as items,
+                  payer details, and shipment information.
+
             request_options: Per-call configuration overrides.
 
         Raises:
             ValueError: If *payment_object* is not a ``dict``.
 
         Returns:
-            dict: Created payment including its ``id`` and ``status``.
+            dict: Created payment including ``id``, ``status``,
+                ``status_detail``, and additional processing information.
+                For redirect-based methods (e.g. PIX), includes
+                ``point_of_interaction`` with QR code or redirect URL.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-payment/post
         """
@@ -77,14 +105,22 @@ class Payment(MPBase):
 
         Args:
             payment_id: Identifier of the payment to update.
-            payment_object: Dict with the fields to modify.
+            payment_object: Dict with the fields to modify. Common fields
+                include:
+
+                - ``status`` (str): New payment status (e.g. ``"cancelled"``).
+                - ``capture`` (bool): Set to ``True`` to capture a previously
+                  authorized payment.
+                - ``transaction_amount`` (float): Update amount (only for
+                  uncaptured payments).
+
             request_options: Per-call configuration overrides.
 
         Raises:
             ValueError: If *payment_object* is not a ``dict``.
 
         Returns:
-            dict: Updated payment object.
+            dict: Updated payment object with the modified fields.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/update-payment/put
         """
@@ -92,4 +128,44 @@ class Payment(MPBase):
             raise ValueError("Param payment_object must be a Dictionary")
 
         return self._put(uri="/v1/payments/" + str(payment_id), data=payment_object,
+                         request_options=request_options)
+
+    def cancel(self, payment_id, request_options=None):
+        """Cancels a payment.
+
+        Sets the payment status to ``cancelled``. Only pending or
+        in_process payments can be cancelled. For authorized (uncaptured)
+        payments, use :meth:`update` with ``{"status": "cancelled"}``.
+
+        Args:
+            payment_id: Identifier of the payment to cancel.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Cancelled payment with ``status`` set to ``"cancelled"``.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/update-payment/put
+        """
+        cancel_object = {"status": "cancelled"}
+        return self._put(uri="/v1/payments/" + str(payment_id), data=cancel_object,
+                         request_options=request_options)
+
+    def capture(self, payment_id, request_options=None):
+        """Captures a previously authorized payment.
+
+        Use this for two-step payment flows where the payment was created
+        with ``capture=False``. Sends ``{"capture": true}`` to finalize
+        the transaction.
+
+        Args:
+            payment_id: Identifier of the payment to capture.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Captured payment with updated ``status`` and amounts.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/update-payment/put
+        """
+        capture_object = {"capture": True}
+        return self._put(uri="/v1/payments/" + str(payment_id), data=capture_object,
                          request_options=request_options)
