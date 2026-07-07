@@ -1,7 +1,8 @@
 """Refund resource for the MercadoPago Payments API.
 
 Wraps ``/v1/payments/{payment_id}/refunds`` endpoints to list existing
-refunds and create full or partial refunds on approved payments.
+refunds, retrieve a specific refund, and create full or partial refunds
+on approved payments.
 
 Refunds are available within 180 days of payment approval and require
 sufficient account balance.
@@ -12,7 +13,7 @@ from mercadopago.core import MPBase
 
 
 class Refund(MPBase):
-    """Creates and lists refunds for payments.
+    """Creates, retrieves, and lists refunds for payments.
 
     Supports full refunds (omit *refund_object*) and partial refunds
     (pass ``{"amount": <float>}``).  Refunds can only be issued for
@@ -32,6 +33,22 @@ class Refund(MPBase):
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/get-refunds/get
         """
         return self._get(uri="/v1/payments/" + str(payment_id) + "/refunds",
+                         request_options=request_options)
+
+    def get(self, payment_id, refund_id, request_options=None):
+        """Retrieves a specific refund by its ID.
+
+        Args:
+            payment_id: Identifier of the parent payment.
+            refund_id: Identifier of the refund to retrieve.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Full refund object including status, amount, and metadata.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/get-refund/get
+        """
+        return self._get(uri=f"/v1/payments/{str(payment_id)}/refunds/{str(refund_id)}",
                          request_options=request_options)
 
     def create(self, payment_id, refund_object=None, request_options=None):
