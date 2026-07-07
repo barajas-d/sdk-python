@@ -100,7 +100,7 @@ class Customer(MPBase):
         Returns:
             dict: Deletion confirmation response.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/delete-customer/delete
         """
         return self._delete(uri="/v1/customers/" + str(customer_id),
                             request_options=request_options)
