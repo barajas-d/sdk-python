@@ -3,7 +3,7 @@
 Wraps ``/checkout/preferences`` endpoints to create, retrieve, update,
 and search payment preferences used by Checkout Pro.
 
-`API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-pro/preferences/create-preference/post>`_
+`API reference <https://www.mercadopago.com/developers/en/reference/preferences/_checkout_preferences/post>`_
 """
 from mercadopago.core import MPBase
 
@@ -26,7 +26,7 @@ class Preference(MPBase):
         Returns:
             dict: Full preference object.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-pro/preferences/get-preference/get
+        Reference: https://www.mercadopago.com/developers/en/reference/preferences/_checkout_preferences_id/get
         """
         return self._get(uri="/checkout/preferences/" + str(preference_id),
                          request_options=request_options)
@@ -45,7 +45,7 @@ class Preference(MPBase):
         Returns:
             dict: Updated preference object.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-pro/preferences/update-preference/put
+        Reference: https://www.mercadopago.com/developers/en/reference/preferences/_checkout_preferences_id/put
         """
         if not isinstance(preference_object, dict):
             raise ValueError("Param preference_object must be a Dictionary")
@@ -70,7 +70,7 @@ class Preference(MPBase):
         Returns:
             dict: Created preference including ``id`` and ``init_point``.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-pro/preferences/create-preference/post
+        Reference: https://www.mercadopago.com/developers/en/reference/preferences/_checkout_preferences/post
         """
         if not isinstance(preference_object, dict):
             raise ValueError("Param preference_object must be a Dictionary")
@@ -82,13 +82,14 @@ class Preference(MPBase):
         """Searches preferences matching the given filters.
 
         Args:
-            filters: Query-string parameters (e.g. ``external_reference``).
+            filters: Query-string parameters (e.g. ``external_reference``,
+                ``limit``, ``offset``).
             request_options: Per-call configuration overrides.
 
         Returns:
             dict: Paginated list of matching preferences.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-pro/preferences/search-preferences/get
+        Reference: https://www.mercadopago.com/developers/en/reference/preferences/_checkout_preferences_search/get
         """
 
         return self._get(uri="/checkout/preferences/search", filters=filters,
