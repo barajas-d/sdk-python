@@ -51,7 +51,7 @@ class Customer(MPBase):
 
         Args:
             customer_object: Dict with customer data (email, first_name,
-                last_name, identification, etc.).
+                last_name, identification, phone, address, description, etc.).
             request_options: Per-call configuration overrides.
 
         Raises:
@@ -100,7 +100,7 @@ class Customer(MPBase):
         Returns:
             dict: Deletion confirmation response.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/get-customer/get
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/customers/delete-customer/delete
         """
         return self._delete(uri="/v1/customers/" + str(customer_id),
                             request_options=request_options)
