@@ -1,7 +1,7 @@
 """Payment resource for the MercadoPago Checkout API.
 
-Wraps ``/v1/payments`` endpoints to search, retrieve, create, and update
-payments.
+Wraps ``/v1/payments`` endpoints to search, retrieve, create, update, and
+cancel payments.
 
 `API reference <https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-payment/post>`_
 """
@@ -92,4 +92,24 @@ class Payment(MPBase):
             raise ValueError("Param payment_object must be a Dictionary")
 
         return self._put(uri="/v1/payments/" + str(payment_id), data=payment_object,
+                         request_options=request_options)
+
+    def cancel(self, payment_id, request_options=None):
+        """Cancels an existing payment.
+
+        Sends a PUT request to update the payment status to ``cancelled``.
+        Only payments that have not yet been captured or completed can be
+        cancelled.
+
+        Args:
+            payment_id: Identifier of the payment to cancel.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Cancelled payment object with updated status.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/update-payment/put
+        """
+        cancel_object = {"status": "cancelled"}
+        return self._put(uri="/v1/payments/" + str(payment_id), data=cancel_object,
                          request_options=request_options)
