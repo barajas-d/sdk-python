@@ -145,7 +145,11 @@ class SDK:  # pylint: disable=too-many-public-methods
                        or self.request_options, self.http_client)
 
     def payment(self, request_options=None):
-        """Creates a :class:`Payment` resource for the Checkout API."""
+        """Creates a :class:`Payment` resource for the Checkout API.
+        
+        The returned Payment instance includes the newly added cancel() method
+        alongside the existing search(), get(), create(), and update() methods.
+        """
         return Payment(request_options is not None and request_options
                        or self.request_options, self.http_client)
 
