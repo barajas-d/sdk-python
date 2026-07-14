@@ -9,6 +9,7 @@ transaction management.
 """
 from mercadopago.core import MPBase
 
+
 class Order(MPBase):
     """Manages orders and their associated transactions.
 
