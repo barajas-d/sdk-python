@@ -295,6 +295,25 @@ class Order(MPBase):
         """
         return self.refund_transaction(order_id, refund_object, request_options)
 
+    def get_refunds(self, order_id, request_options=None):
+        """Retrieves all refunds associated with an order.
+
+        Args:
+            order_id: String identifier of the order.
+            request_options: Per-call configuration overrides.
+
+        Raises:
+            ValueError: If *order_id* is not a ``str``.
+
+        Returns:
+            dict: Response containing a 'refunds' array with refund details
+                (id, transaction_id, amount, status).
+        """
+        if not isinstance(order_id, str):
+            raise ValueError("Param order_id must be a string")
+
+        return self._get(uri=f"/v1/orders/{order_id}/refund", request_options=request_options)
+
     def delete_transaction(self, order_id, transaction_id, request_options=None):
         """Removes a transaction from an order.
 
