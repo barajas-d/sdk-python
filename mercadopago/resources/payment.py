@@ -93,3 +93,35 @@ class Payment(MPBase):
 
         return self._put(uri="/v1/payments/" + str(payment_id), data=payment_object,
                          request_options=request_options)
+
+    def refund(self, payment_id, amount=None, request_options=None):
+        """Refunds a payment in full or partially.
+
+        Creates a refund for an approved payment. Omit the *amount*
+        parameter for a full refund, or pass a float value for a partial
+        refund. Refunds are available within 180 days of payment approval
+        and require sufficient account balance.
+
+        Args:
+            payment_id: Identifier of the payment to refund.
+            amount: Optional refund amount as a ``float``. When ``None``,
+                the entire payment amount is refunded.
+            request_options: Per-call configuration overrides.
+
+        Raises:
+            ValueError: If *amount* is provided but not a ``float``.
+
+        Returns:
+            dict: Refund response including ``id``, ``status``, and
+                ``amount`` refunded.
+
+        Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api-payments/create-refund/post
+        """
+        refund_object = None
+        if amount is not None:
+            if not isinstance(amount, (int, float)):
+                raise ValueError("Param amount must be a Float")
+            refund_object = {"amount": float(amount)}
+
+        return self._post(uri="/v1/payments/" + str(payment_id) + "/refunds",
+                          data=refund_object, request_options=request_options)
