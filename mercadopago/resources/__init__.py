@@ -17,6 +17,7 @@ from mercadopago.resources.invoice import Invoice
 from mercadopago.resources.merchant_order import MerchantOrder
 from mercadopago.resources.oauth import OAuth
 from mercadopago.resources.order import Order
+from mercadopago.resources.order_automatic_payments import OrderAutomaticPayments
 from mercadopago.resources.order_checkout_pro import (
     OrderCheckoutProConfig,
     OrderCheckoutProInstallments,
@@ -25,6 +26,16 @@ from mercadopago.resources.order_checkout_pro import (
     OrderCheckoutProPaymentMethod,
     OrderCheckoutProTrack,
     OrderCheckoutProDict,
+)
+from mercadopago.resources.order_integration_data import (
+    OrderIntegrationData,
+    OrderSponsor,
+)
+from mercadopago.resources.order_stored_credential import OrderStoredCredential
+from mercadopago.resources.order_subscription_data import (
+    OrderInvoicePeriod,
+    OrderSubscriptionData,
+    OrderSubscriptionSequence,
 )
 from mercadopago.resources.payment import Payment
 from mercadopago.resources.payment_methods import PaymentMethods
@@ -50,6 +61,7 @@ __all__ = (
     'MerchantOrder',
     'OAuth',
     'Order',
+    'OrderAutomaticPayments',
     'OrderCheckoutProConfig',
     'OrderCheckoutProInstallments',
     'OrderCheckoutProInterestFree',
@@ -57,6 +69,12 @@ __all__ = (
     'OrderCheckoutProPaymentMethod',
     'OrderCheckoutProTrack',
     'OrderCheckoutProDict',
+    'OrderIntegrationData',
+    'OrderInvoicePeriod',
+    'OrderSponsor',
+    'OrderStoredCredential',
+    'OrderSubscriptionData',
+    'OrderSubscriptionSequence',
     'Payment',
     'PaymentMethods',
     'Plan',
