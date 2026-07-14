@@ -140,7 +140,18 @@ class SDK:  # pylint: disable=too-many-public-methods
                              or self.request_options, self.http_client)
 
     def order(self, request_options=None):
-        """Creates an :class:`Order` resource for the Orders API."""
+        """Creates an :class:`Order` resource for the Orders API.
+        
+        The Order resource provides access to all order-related operations including:
+        - Basic operations: create, get, search
+        - Lifecycle management: process, capture, cancel
+        - Transaction management: create_transaction, update_transaction, delete_transaction
+        - Refund operations: refund, refund_transaction
+        - New operations: confirm, simulate_event, get_refunds (when available)
+        
+        Returns:
+            Order: An Order resource instance bound to the SDK's credentials.
+        """
         return Order(request_options is not None and request_options
                        or self.request_options, self.http_client)
 
