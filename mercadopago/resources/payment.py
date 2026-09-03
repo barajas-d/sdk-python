@@ -49,7 +49,7 @@ class Payment(MPBase):
         return self._get(uri="/v1/payments/" + str(payment_id), request_options=request_options)
 
     def create(self, payment_object, request_options=None):
-        """Creates a new payment.
+        """Creates a new payment via POST /v1/payments.
 
         Args:
             payment_object: Dict describing the payment (amount, payer,
