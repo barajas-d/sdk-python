@@ -66,10 +66,9 @@ payment = result["response"]
 ## 📚 Documentation 
 
 Visit our Dev Site for further information regarding:
- - [APIs](https://www.mercadopago.com/developers/en/reference)
- - [Checkout Pro](https://www.mercadopago.com/developers/en/guides/online-payments/checkout-pro/introduction)
+ - [Suscripciones](https://www.mercadopago.com/developers/es/docs/subscriptions/overview)
+ - [Checkout Pro](https://www.mercadopago.com/developers/es/docs/checkout-pro-orders/overview)
  - [Checkout API](https://www.mercadopago.com/developers/en/guides/online-payments/checkout-api/introduction)
- - [Web Tokenize Checkout](https://www.mercadopago.com/developers/en/guides/online-payments/web-tokenize-checkout/introduction)
 
 Check our official code reference to explore all available functionalities.
 
