@@ -40,10 +40,31 @@ class FakeHttpClient(HttpClient):
             "status": 201,
             "response": {
                 "id": "ORDTST01KS5AJ6HTK2HRQ3XJ3C2JCKP9",
-                "status": "created",
                 "type": "online",
-                "processing_mode": "manual",
-                "checkout_url": "https://www.mercadopago.com/checkout/v1/redirect",
+                "processing_mode": "automatic",
+                "capture_mode": "automatic",
+                "status": "processed",
+                "status_detail": "accredited",
+                "total_amount": "500.00",
+                "total_paid_amount": "500.00",
+                "external_reference": "ext_ref_orders_online",
+                "payer": {"email": "buyer@mercadopago.com"},
+                "transactions": {
+                    "payments": [
+                        {
+                            "id": "PAY01KS5AJ6HTK2HRQ3XJ3C2JCKP9",
+                            "amount": "500.00",
+                            "paid_amount": "500.00",
+                            "status": "processed",
+                            "status_detail": "accredited",
+                            "payment_method": {
+                                "id": "visa",
+                                "type": "credit_card",
+                                "installments": 1,
+                            },
+                        }
+                    ]
+                },
             },
         }
 
