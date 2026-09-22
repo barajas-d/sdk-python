@@ -71,17 +71,27 @@ class Order(MPBase):
     """
 
     def search(self, filters=None, request_options=None):
-        """Searches orders matching the given filters.
+        """Searches orders within the required date range.
 
         Args:
-            filters: Query-string parameters (e.g. ``external_reference``).
+            filters: Query-string parameters. ``begin_date`` and ``end_date``
+                are required ISO 8601 date-times.
             request_options: Per-call configuration overrides.
+
+        Raises:
+            ValueError: If *filters* is not a dict or omits either required
+                date filter.
 
         Returns:
             dict: Paginated list of matching orders.
 
         Reference: https://www.mercadopago.com/developers/en/reference/online-payments/checkout-api/search-order/get
         """
+        if not isinstance(filters, dict):
+            raise ValueError("Param filters must be a Dictionary")
+        if "begin_date" not in filters or "end_date" not in filters:
+            raise ValueError("Params begin_date and end_date are required")
+
         return self._get(uri="/v1/orders", filters=filters,
                          request_options=request_options)
 
