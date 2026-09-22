@@ -9,6 +9,7 @@ transaction management.
 """
 from mercadopago.core import MPBase
 
+
 class Order(MPBase):
     """Manages orders and their associated transactions.
 
@@ -73,8 +74,14 @@ class Order(MPBase):
     def search(self, filters=None, request_options=None):
         """Searches orders matching the given filters.
 
+        ``begin_date`` and ``end_date`` are required ISO-8601 query values.
+        Supported optional filters are ``external_reference``, ``type``
+        (``"online"``), ``status``, ``limit`` (default 30, maximum 100), and
+        ``offset`` (default 0). The SDK forwards filters unchanged and preserves
+        the API response envelope.
+
         Args:
-            filters: Query-string parameters (e.g. ``external_reference``).
+            filters: Orders search query parameters.
             request_options: Per-call configuration overrides.
 
         Returns:
