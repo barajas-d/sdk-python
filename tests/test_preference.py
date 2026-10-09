@@ -7,11 +7,15 @@ import time
 import mercadopago
 
 
+@unittest.skipIf("ACCESS_TOKEN" not in os.environ, "ACCESS_TOKEN is required")
 class TestPreference(unittest.TestCase):
     """
     Test Module: Preference
     """
-    sdk = mercadopago.SDK(os.environ['ACCESS_TOKEN'])
+
+    @classmethod
+    def setUpClass(cls):
+        cls.sdk = mercadopago.SDK(os.environ["ACCESS_TOKEN"])
 
     def test_all(self):
         """
