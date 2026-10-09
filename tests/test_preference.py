@@ -5,6 +5,29 @@ import os
 import unittest
 import time
 import mercadopago
+from mercadopago.http import HttpClient
+
+
+class FakeHttpClient(HttpClient):
+    """Captures PUT requests without sending them to the API."""
+
+    def __init__(self):
+        self.put_calls = []
+        self.response = {
+            "status": 200,
+            "response": {"id": 123, "expires": True},
+        }
+
+    def put(self, url, headers, data=None, params=None, timeout=None, maxretries=None):
+        self.put_calls.append({
+            "url": url,
+            "headers": headers,
+            "data": data,
+            "params": params,
+            "timeout": timeout,
+            "maxretries": maxretries,
+        })
+        return self.response
 
 
 class TestPreference(unittest.TestCase):
@@ -49,6 +72,22 @@ class TestPreference(unittest.TestCase):
         time.sleep(3)
         preference_search = self.sdk.preference().search()
         self.assertEqual(preference_search["status"], 200)
+
+    def test_expire_uses_put_endpoint_and_propagates_response(self):
+        """Test expiring a preference through its dedicated endpoint."""
+        http_client = FakeHttpClient()
+        preference = mercadopago.SDK(
+            "TEST_ACCESS_TOKEN", http_client=http_client
+        ).preference()
+
+        response = preference.expire(123)
+
+        self.assertIs(response, http_client.response)
+        self.assertEqual(len(http_client.put_calls), 1)
+        self.assertEqual(
+            http_client.put_calls[0]["url"],
+            "https://api.mercadopago.com/checkout/preferences/123/expire",
+        )
 
 
 if __name__ == "__main__":
