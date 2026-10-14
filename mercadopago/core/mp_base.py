@@ -79,7 +79,7 @@ class MPBase:
 
         return headers
 
-    def _get(self, uri, filters=None, request_options=None):
+    def _get(self, uri, filters=None, request_options=None, raw_response=False):
         """Performs an authenticated GET request.
 
         Args:
