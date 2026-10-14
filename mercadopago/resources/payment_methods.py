@@ -1,8 +1,8 @@
 """Payment Methods resource for the MercadoPago API.
 
-Wraps the ``/v1/payment_methods`` endpoint to list the payment methods
-available for the authenticated account (credit cards, debit cards,
-bank transfers, cash, etc.).
+Wraps ``/v1/payment_methods`` to list payment methods available for the
+authenticated account and retrieve installment options for a payment
+method and amount.
 """
 from mercadopago.core import MPBase
 
@@ -25,6 +25,29 @@ class PaymentMethods(MPBase):
             status, thumbnail, etc.).
         """
         return self._get(uri="/v1/payment_methods", request_options=request_options)
+
+    def get_installments(self, payment_method_id, amount, issuer_id=None, bin=None,
+                         request_options=None):
+        """Retrieves available installment plans for a payment method and amount.
+
+        Args:
+            payment_method_id: Payment method identifier (e.g. ``visa``).
+            amount: Transaction amount.
+            issuer_id: Optional card issuer identifier.
+            bin: Optional first six digits of the card.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Normalized HTTP response containing installment options.
+        """
+        if payment_method_id is None or amount is None:
+            raise ValueError("payment_method_id and amount are required")
+
+        filters = {"payment_method_id": payment_method_id, "amount": amount}
+        filters.update({key: value for key, value in (("issuer_id", issuer_id), ("bin", bin))
+                        if value is not None})
+        return self._get(uri="/v1/payment_methods/installments", filters=filters,
+                         request_options=request_options)
 
     @property
     def request_options(self):
