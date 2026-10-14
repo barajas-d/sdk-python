@@ -36,6 +36,31 @@ class Subscription(MPBase):
             filters=filters,
             request_options=request_options)
 
+    def export(self, collector_id, preapproval_plan_id=None, status=None, sort=None,
+               request_options=None):
+        """Exports subscriptions as CSV for a collector.
+
+        Args:
+            collector_id: Required seller user ID.
+            preapproval_plan_id: Optional plan ID filter.
+            status: Optional subscription status filter.
+            sort: Optional sort order; defaults to ``date_created`` on the server.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: HTTP status and CSV bytes for a successful export.
+        """
+        filters = {"collector_id": collector_id}
+        for name, value in (("preapproval_plan_id", preapproval_plan_id),
+                            ("status", status), ("sort", sort)):
+            if value is not None:
+                filters[name] = value
+
+        return self._get(
+            uri="/preapproval/export",
+            filters=filters,
+            request_options=request_options)
+
     def get(self, subscription_id, request_options=None):
         """Retrieves a subscription by its ID.
 

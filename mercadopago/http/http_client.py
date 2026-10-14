@@ -18,10 +18,11 @@ class HttpClient:
 
     The response format returned by every method is::
 
-        {"status": <int>, "response": <dict | list | None>}
+        {"status": <int>, "response": <dict | list | bytes | None>}
 
     where *status* is the HTTP status code and *response* is the parsed
-    JSON body (``None`` for 204 No Content or unparseable bodies).
+    JSON body, raw bytes for a successful text/csv export, or ``None``
+    for 204 No Content or unparseable bodies.
     """
 
     def request(self, method, url, maxretries=None, **kwargs):
@@ -51,11 +52,18 @@ class HttpClient:
             response = {"status": api_result.status_code, "response": None}
 
             if api_result.status_code != 204 and api_result.content:
-                try:
-                    response["response"] = api_result.json()
-                except ValueError as e:
-                    print(f"Failed to parse JSON: {str(e)}")
-                    response["response"] = None
+                if (method.upper() == "GET"
+                        and url.split("?", 1)[0].endswith("/preapproval/export")
+                        and api_result.status_code == 200
+                        and api_result.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
+                        == "text/csv"):
+                    response["response"] = api_result.content
+                else:
+                    try:
+                        response["response"] = api_result.json()
+                    except ValueError as e:
+                        print(f"Failed to parse JSON: {str(e)}")
+                        response["response"] = None
 
             return response
 
