@@ -36,6 +36,26 @@ class Subscription(MPBase):
             filters=filters,
             request_options=request_options)
 
+    def export(self, collector_id, filters=None, request_options=None):
+        """Exports subscriptions for a collector.
+
+        Args:
+            collector_id: Seller user ID (required query parameter).
+            filters: Optional query parameters such as ``preapproval_plan_id``,
+                ``status`` and ``sort``.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Normalised HTTP response. The API serves a CSV file;
+                the default HTTP client does not parse non-JSON content.
+        """
+        params = dict(filters or {})
+        params["collector_id"] = collector_id
+        return self._get(
+            uri="/preapproval/export",
+            filters=params,
+            request_options=request_options)
+
     def get(self, subscription_id, request_options=None):
         """Retrieves a subscription by its ID.
 

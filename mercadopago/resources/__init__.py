@@ -30,6 +30,7 @@ from mercadopago.resources.payment import Payment
 from mercadopago.resources.payment_methods import PaymentMethods
 from mercadopago.resources.plan import Plan
 from mercadopago.resources.point import Point
+from mercadopago.resources.pos import POS
 from mercadopago.resources.preapproval import PreApproval
 from mercadopago.resources.preference import Preference
 from mercadopago.resources.refund import Refund
@@ -61,6 +62,7 @@ __all__ = (
     'PaymentMethods',
     'Plan',
     'Point',
+    'POS',
     'PreApproval',
     'Preference',
     'Refund',
