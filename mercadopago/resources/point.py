@@ -75,6 +75,29 @@ class Point(MPBase):
             request_options=request_options,
         )
 
+    def create_refund(self, device_id, refund_object, request_options=None):
+        """Creates a refund intent on a Point terminal for a payment.
+
+        Args:
+            device_id: Identifier of the terminal device.
+            refund_object: Dict containing required ``payment_id`` and optional ``amount``.
+            request_options: Per-call configuration overrides.
+
+        Raises:
+            ValueError: If *refund_object* is not a ``dict``.
+
+        Returns:
+            dict: Refund intent with its ID and status.
+        """
+        if not isinstance(refund_object, dict):
+            raise ValueError("Param refund_object must be a Dictionary")
+
+        return self._post(
+            uri="/point/integration-api/devices/" + str(device_id) + "/refund",
+            data=refund_object,
+            request_options=request_options,
+        )
+
     def get(self, payment_intent_id, request_options=None):
         """Retrieves the current state of a payment intent by its ID.
 
@@ -97,25 +120,20 @@ class Point(MPBase):
         )
 
     def cancel(self, device_id, payment_intent_id, request_options=None):
-        """Cancels a pending payment intent on a specific device.
-
-        Use this to abort a transaction before the buyer completes the
-        payment on the device.
+        """Cancels a payment intent on a specific Point device.
 
         Args:
-            device_id: Unique identifier of the Point device holding
-                the intent.
-            payment_intent_id: Unique identifier of the payment intent
-                to cancel.
+            device_id: Identifier of the Point device.
+            payment_intent_id: Identifier of the payment intent to cancel.
             request_options: Per-call configuration overrides.
 
         Returns:
-            dict: Cancellation confirmation.
+            dict: Cancellation response.
 
-        Reference: https://www.mercadopago.com/developers/en/reference/in-person-payments/point/orders/cancel-order/post
+        Reference: https://www.mercadopago.com/developers/en/reference/in-person-payments/point/orders/cancel-order/delete
         """
         return self._delete(
             uri="/point/integration-api/devices/" + str(device_id)
-                + "/payment-intents/" + str(payment_intent_id),
+            + "/payment-intents/" + str(payment_intent_id),
             request_options=request_options,
         )
