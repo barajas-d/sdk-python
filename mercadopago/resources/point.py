@@ -75,6 +75,26 @@ class Point(MPBase):
             request_options=request_options,
         )
 
+    def create_refund(self, device_id, refund_object, request_options=None):
+        """Creates a refund intent on a Point terminal.
+
+        Args:
+            device_id: Terminal device identifier.
+            refund_object: Dict containing ``payment_id`` and optionally ``amount``.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: Created refund intent with its ID and status.
+        """
+        if not isinstance(refund_object, dict):
+            raise ValueError("Param refund_object must be a Dictionary")
+
+        return self._post(
+            uri="/point/integration-api/devices/" + str(device_id) + "/refund",
+            data=refund_object,
+            request_options=request_options,
+        )
+
     def get(self, payment_intent_id, request_options=None):
         """Retrieves the current state of a payment intent by its ID.
 
@@ -96,26 +116,4 @@ class Point(MPBase):
             request_options=request_options,
         )
 
-    def cancel(self, device_id, payment_intent_id, request_options=None):
-        """Cancels a pending payment intent on a specific device.
 
-        Use this to abort a transaction before the buyer completes the
-        payment on the device.
-
-        Args:
-            device_id: Unique identifier of the Point device holding
-                the intent.
-            payment_intent_id: Unique identifier of the payment intent
-                to cancel.
-            request_options: Per-call configuration overrides.
-
-        Returns:
-            dict: Cancellation confirmation.
-
-        Reference: https://www.mercadopago.com/developers/en/reference/in-person-payments/point/orders/cancel-order/post
-        """
-        return self._delete(
-            uri="/point/integration-api/devices/" + str(device_id)
-                + "/payment-intents/" + str(payment_intent_id),
-            request_options=request_options,
-        )
