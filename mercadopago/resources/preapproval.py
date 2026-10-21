@@ -91,3 +91,27 @@ class PreApproval(MPBase):
 
         return self._put(uri="/preapproval/" + str(preapproval_id),
                          data=preapproval_object, request_options=request_options)
+
+    def export_subscriptions(self, collector_id, preapproval_plan_id=None, status=None,
+                             sort=None, request_options=None):
+        """Exports subscriptions as a CSV file for a collector.
+
+        Args:
+            collector_id: Required seller user ID.
+            preapproval_plan_id: Optional subscription plan ID filter.
+            status: Optional subscription status filter.
+            sort: Optional sort order.
+            request_options: Per-call configuration overrides.
+
+        Returns:
+            dict: HTTP status and the raw CSV response bytes.
+        """
+        filters = {"collector_id": collector_id}
+        if preapproval_plan_id is not None:
+            filters["preapproval_plan_id"] = preapproval_plan_id
+        if status is not None:
+            filters["status"] = status
+        if sort is not None:
+            filters["sort"] = sort
+        return self._get_binary(uri="/preapproval/export", filters=filters,
+                                request_options=request_options)

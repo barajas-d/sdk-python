@@ -21,22 +21,34 @@ from mercadopago.resources import (
     Card,
     CardToken,
     Chargeback,
+    Claims,
     Customer,
+    CustomerAddress,
     DisbursementRefund,
     IdentificationType,
     Invoice,
+    Invoices,
     MerchantOrder,
     OAuth,
     Order,
     Payment,
     PaymentMethods,
+    Payouts,
     Plan,
     Point,
+    POS,
     PreApproval,
     Preference,
+    QRIntegrator,
+    QROrders,
     Refund,
+    ReleasesReport,
+    SettlementsReport,
     Subscription,
+    Terminals,
+    Stores,
     User,
+    WalletConnect,
 )
 
 
@@ -109,6 +121,18 @@ class SDK:  # pylint: disable=too-many-public-methods
         return Customer(request_options is not None and request_options
                         or self.request_options, self.http_client)
 
+    def customer_address(self, request_options=None):
+        """Creates a :class:`CustomerAddress` resource for customer addresses.
+
+        Args:
+            request_options: Per-resource configuration overrides.
+
+        Returns:
+            CustomerAddress: Resource bound to this SDK's HTTP client.
+        """
+        return CustomerAddress(request_options is not None and request_options
+                               or self.request_options, self.http_client)
+
     def disbursement_refund(self, request_options=None):
         """Creates a :class:`DisbursementRefund` resource for advanced-payment refunds."""
         return DisbursementRefund(request_options is not None and request_options
@@ -124,6 +148,11 @@ class SDK:  # pylint: disable=too-many-public-methods
         return Invoice(request_options is not None and request_options
                        or self.request_options, self.http_client)
 
+    def invoices(self, request_options=None):
+        """Creates an :class:`Invoices` resource to search subscription invoices."""
+        return Invoices(request_options is not None and request_options
+                        or self.request_options, self.http_client)
+
     def oauth(self, request_options=None):
         """Creates an :class:`OAuth` resource for the OAuth 2.0 authorization code flow."""
         return OAuth(request_options is not None and request_options
@@ -133,6 +162,16 @@ class SDK:  # pylint: disable=too-many-public-methods
         """Creates a :class:`Point` resource for in-person payments via Point devices."""
         return Point(request_options is not None and request_options
                      or self.request_options, self.http_client)
+
+    def pos(self, request_options=None):
+        """Creates a :class:`POS` resource to search points of sale."""
+        return POS(request_options is not None and request_options
+                   or self.request_options, self.http_client)
+
+    def terminals(self, request_options=None):
+        """Creates a :class:`Terminals` resource for Point terminal operations."""
+        return Terminals(request_options is not None and request_options
+                         or self.request_options, self.http_client)
 
     def merchant_order(self, request_options=None):
         """Creates a :class:`MerchantOrder` resource for Checkout Pro orders."""
@@ -154,6 +193,18 @@ class SDK:  # pylint: disable=too-many-public-methods
         return PaymentMethods(request_options is not None and request_options
                               or self.request_options, self.http_client)
 
+    def payouts(self, request_options=None):
+        """Creates a :class:`Payouts` resource for payouts and transaction intents.
+
+        Args:
+            request_options: Per-resource configuration overrides.
+
+        Returns:
+            Payouts: Resource bound to this SDK's HTTP client.
+        """
+        return Payouts(request_options is not None and request_options
+                       or self.request_options, self.http_client)
+
     def preapproval(self, request_options=None):
         """Creates a :class:`PreApproval` resource for ad-hoc subscriptions."""
         return PreApproval(request_options is not None and request_options
@@ -163,6 +214,16 @@ class SDK:  # pylint: disable=too-many-public-methods
         """Creates a :class:`Preference` resource for Checkout Pro sessions."""
         return Preference(request_options is not None and request_options
                           or self.request_options, self.http_client)
+
+    def qr_integrator(self, request_options=None):
+        """Creates a :class:`QRIntegrator` resource for QR integrator configuration."""
+        return QRIntegrator(request_options is not None and request_options
+                            or self.request_options, self.http_client)
+
+    def qr_orders(self, request_options=None):
+        """Creates a :class:`QROrders` resource for in-store QR orders."""
+        return QROrders(request_options is not None and request_options
+                        or self.request_options, self.http_client)
 
     def refund(self, request_options=None):
         """Creates a :class:`Refund` resource for payment refunds."""
@@ -179,15 +240,54 @@ class SDK:  # pylint: disable=too-many-public-methods
         return Chargeback(request_options is not None and request_options
                           or self.request_options, self.http_client)
 
+    def claims(self, request_options=None):
+        """Creates a :class:`Claims` resource to consult post-purchase claims."""
+        return Claims(request_options is not None and request_options
+                      or self.request_options, self.http_client)
+
+    def releases_report(self, request_options=None):
+        """Creates a :class:`ReleasesReport` resource for releases reports."""
+        return ReleasesReport(request_options is not None and request_options
+                              or self.request_options, self.http_client)
+
+    def settlements_report(self, request_options=None):
+        """Creates a :class:`SettlementsReport` resource for settlements reports.
+
+        Args:
+            request_options: Per-resource configuration overrides.
+
+        Returns:
+            SettlementsReport: Resource bound to this SDK's HTTP client.
+        """
+        return SettlementsReport(request_options is not None and request_options
+                                 or self.request_options, self.http_client)
+
     def subscription(self, request_options=None):
         """Creates a :class:`Subscription` resource for plan-based recurring billing."""
         return Subscription(request_options is not None and request_options
                             or self.request_options, self.http_client)
 
+    def stores(self, request_options=None):
+        """Creates a :class:`Stores` resource to retrieve store details."""
+        return Stores(request_options is not None and request_options
+                      or self.request_options, self.http_client)
+
     def plan(self, request_options=None):
         """Creates a :class:`Plan` resource for subscription plan templates."""
         return Plan(request_options is not None and request_options
                     or self.request_options, self.http_client)
+
+    def wallet_connect(self, request_options=None):
+        """Creates a :class:`WalletConnect` resource for wallet agreements and offers.
+
+        Args:
+            request_options: Per-resource configuration overrides.
+
+        Returns:
+            WalletConnect: Resource bound to this SDK's HTTP client.
+        """
+        return WalletConnect(request_options is not None and request_options
+                             or self.request_options, self.http_client)
 
     @property
     def request_options(self):
