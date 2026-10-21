@@ -11,6 +11,7 @@ from mercadopago.resources.card import Card
 from mercadopago.resources.card_token import CardToken
 from mercadopago.resources.chargeback import Chargeback
 from mercadopago.resources.customer import Customer
+from mercadopago.resources.customer_address import CustomerAddress
 from mercadopago.resources.disbursement_refund import DisbursementRefund
 from mercadopago.resources.identification_type import IdentificationType
 from mercadopago.resources.invoice import Invoice
@@ -33,6 +34,7 @@ from mercadopago.resources.point import Point
 from mercadopago.resources.preapproval import PreApproval
 from mercadopago.resources.preference import Preference
 from mercadopago.resources.refund import Refund
+from mercadopago.resources.stores import Stores
 from mercadopago.resources.subscription import Subscription
 from mercadopago.resources.user import User
 
@@ -43,6 +45,7 @@ __all__ = (
     'CardToken',
     'Chargeback',
     'Customer',
+    'CustomerAddress',
     'DisbursementRefund',
     'HttpClient',
     'IdentificationType',
@@ -65,6 +68,7 @@ __all__ = (
     'Preference',
     'Refund',
     'RequestOptions',
+    'Stores',
     'Subscription',
     'User',
 )

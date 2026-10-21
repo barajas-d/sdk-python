@@ -22,6 +22,7 @@ from mercadopago.resources import (
     CardToken,
     Chargeback,
     Customer,
+    CustomerAddress,
     DisbursementRefund,
     IdentificationType,
     Invoice,
@@ -35,6 +36,7 @@ from mercadopago.resources import (
     PreApproval,
     Preference,
     Refund,
+    Stores,
     Subscription,
     User,
 )
@@ -109,6 +111,11 @@ class SDK:  # pylint: disable=too-many-public-methods
         return Customer(request_options is not None and request_options
                         or self.request_options, self.http_client)
 
+    def customer_address(self, request_options=None):
+        """Creates a :class:`CustomerAddress` resource to manage customer addresses."""
+        return CustomerAddress(request_options is not None and request_options
+                               or self.request_options, self.http_client)
+
     def disbursement_refund(self, request_options=None):
         """Creates a :class:`DisbursementRefund` resource for advanced-payment refunds."""
         return DisbursementRefund(request_options is not None and request_options
@@ -153,6 +160,11 @@ class SDK:  # pylint: disable=too-many-public-methods
         """Creates a :class:`PaymentMethods` resource to list available payment methods."""
         return PaymentMethods(request_options is not None and request_options
                               or self.request_options, self.http_client)
+
+    def stores(self, request_options=None):
+        """Creates a :class:`Stores` resource to retrieve store details."""
+        return Stores(request_options is not None and request_options
+                      or self.request_options, self.http_client)
 
     def preapproval(self, request_options=None):
         """Creates a :class:`PreApproval` resource for ad-hoc subscriptions."""
