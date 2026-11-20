@@ -68,6 +68,12 @@ class Order(MPBase):
                 "id": str,                 # MercadoPago user ID of the sponsor.
             },
         }
+
+    OpenAPI ``OrderRequest.integration_data`` clarification: the supplied
+    schema lists only ``platform_id`` (string) and ``sponsor_id`` (integer)
+    as properties of this root-level request dict. The legacy example above
+    instead lists ``integrator_id``, ``corporation_id``, and ``sponsor.id``;
+    those keys are not listed in the supplied ``OrderRequest`` schema.
     """
 
     def search(self, filters=None, request_options=None):
@@ -228,6 +234,8 @@ class Order(MPBase):
         return self._post(uri=f"/v1/orders/{order_id}/transactions", data=transaction_object,
                           request_options=request_options)
 
+    # Transaction updates accept a payment_method dict; the MPBase PUT helper
+    # serializes it and returns the transport's response envelope unchanged.
     def update_transaction(
         self, order_id, transaction_id, transaction_object, request_options=None
     ):
