@@ -106,6 +106,25 @@ class Order(MPBase):
 
         return self._post(uri="/v1/orders", data=order_object, request_options=request_options)
 
+    def create_event(self, order_id, event_object, request_options=None):
+        """Simulates a status event for a Point test order.
+
+        Args:
+            order_id: Identifier of the test order.
+            event_object: Dict containing the required ``status`` and optional
+                ``status_detail``, ``payment_method_type``, ``installments``
+                and ``payment_method_id`` fields.
+            request_options: Per-call overrides, including custom headers.
+
+        Returns:
+            dict: Transport response, including status 204 and no content on success.
+        """
+        if not isinstance(event_object, dict):
+            raise ValueError("Param event_object must be a Dictionary")
+
+        return self._post(uri=f"/v1/orders/{order_id}/events", data=event_object,
+                          request_options=request_options)
+
     def get(self, order_id, request_options=None):
         """Retrieves a single order by its ID.
 
@@ -255,8 +274,14 @@ class Order(MPBase):
     def refund_transaction(self, order_id, transaction_object=None, request_options=None):
         """Refunds an order's transactions.
 
-        Pass *transaction_object* with an ``amount`` key for a partial
-        refund, or ``None`` for a full refund of every transaction.
+        For a partial refund, pass *transaction_object* with a
+        ``transactions`` array containing the payment transaction's ``id``
+        (from ``transactions.payments.id``) and its refund ``amount``:
+        ``{"transactions": [{"id": "PAY-123", "amount": "25.00"}]}``.
+        For Checkout Pro split refunds, pass ``splits`` entries identified
+        by ``user_id`` (with optional ``amount``); for Split 1:N, identify
+        each receiver by ``receiver_id`` (with optional ``amount``) instead.
+        Omit the body (``None``) to refund the whole order.
 
         Args:
             order_id: Identifier of the order to refund.
