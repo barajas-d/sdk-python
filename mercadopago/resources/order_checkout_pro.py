@@ -1,4 +1,10 @@
-"""Dataclasses for Checkout Pro fields in order requests."""
+"""Dataclasses for Checkout Pro fields in order creation requests.
+
+Refund requests use ordinary dictionaries passed directly to
+``Order.refund_transaction``; split refunds use ``splits`` with a participant's
+``user_id`` and optional ``amount`` for Checkout Pro (or ``receiver_id`` for
+Split 1:N). These creation-payload helpers are not needed for refunds.
+"""
 from dataclasses import asdict, dataclass, field, is_dataclass
 from typing import Any, Dict, List, Optional
 
